@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clima Mundial - Dashboard Profesional</title>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" href="img/pronostico.ico">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header>
+            <div class="logo">
+                <div class="icon-box">
+                    <span class="material-symbols-outlined">cloud</span>
+                </div>
+                <span>Clima Mundial</span>
+            </div>
+
+            <div class="search-container">
+                <form id="main-search-form" class="search-bar">
+                    <span class="material-symbols-outlined">search</span>
+                    <input type="text" id="city-search" placeholder="Buscar ciudad..." autocomplete="off">
+                    <!-- Loading spinner -->
+                    <div id="search-loading" class="hidden"><span class="material-symbols-outlined spin">sync</span>
+                    </div>
+                    <button type="submit" id="search-btn" class="btn-search">Buscar</button>
+                </form>
+                <!-- Suggestions Dropdown -->
+                <ul id="search-suggestions" class="suggestions-list hidden"></ul>
+                <div id="search-error" class="search-error hidden">Ciudad no encontrada</div>
+            </div>
+
+            <div class="user-actions">
+                <span class="material-symbols-outlined">notifications</span>
+                <button id="btn-open-modal" class="btn-icon" title="Ubicaciones Guardadas">
+                    <span class="material-symbols-outlined">bookmarks</span>
+                    <span class="badge hidden" id="saved-count">0</span>
+                </button>
+                <div class="user-avatar">
+                    <img alt="Avatar"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWmMeU6r7GKkWblRliEOq-kYe5Ng2gb5YF8Zi_g5dcoAK7QLr1O9LGrpiijoqD5OCbyLnDvcFgEPLNkY7PZKR-h3hvpjU16qok0ZdQC2q0hbvEDLP7L4LOtSTVWD9ZIl_osP1_NWEWt57Nr3BWzT3OHQ7usAEvdVxY7TAqliEgtRmuiS0wQOffSujwSSiGPm-u5Wrt659j4dafZmcT-z_gPy6pFgBF1nRKBQ5L7jde9zMbyz7IqUQk7bHcy61V0Cp7Q5p2drDcx5U" />
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Display -->
+        <main>
+            <!-- Loading and empty states -->
+            <div id="initial-state" class="state-message">
+                <span class="material-symbols-outlined icon-large">travel_explore</span>
+                <p>Busca una ciudad para ver el pronóstico del tiempo</p>
+            </div>
+
+            <div id="loading-state" class="state-message hidden">
+                <span class="material-symbols-outlined icon-large spin">sync</span>
+                <p>Cargando información meteorológica...</p>
+            </div>
+
+            <div id="weather-content" class="weather-content hidden">
+                <!-- Current Weather -->
+                <section class="weather-hero">
+                    <div class="hero-top">
+                        <div class="location-info">
+                            <div class="location-header">
+                                <span class="material-symbols-outlined location-icon">location_on</span>
+                                <span class="date">Actual</span>
+                            </div>
+                            <h2 id="current-city-name">Ciudad, País</h2>
+                            <p id="current-date" class="date">Fecha</p>
+                        </div>
+                        <div class="hero-actions">
+                            <button id="btn-save-location" class="btn-save" title="Guardar ciudad">
+                                <span class="material-symbols-outlined">bookmark_add</span>
+                            </button>
+                            <div class="badge-updated">Actualizado ahora</div>
+                        </div>
+                    </div>
+
+                    <div class="hero-middle">
+                        <span id="current-weather-icon"
+                            class="material-symbols-outlined weather-icon-main">wb_sunny</span>
+                        <div>
+                            <div id="current-temp" class="main-temp">--°</div>
+                            <div id="current-desc" class="weather-desc">--</div>
+                        </div>
+                    </div>
+
+                    <div class="hero-bottom">
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined">thermostat</span>
+                            <div>
+                                <span class="stat-label">Sensación</span>
+                                <span id="current-feels-like" class="stat-value">--°C</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined">opacity</span>
+                            <div>
+                                <span class="stat-label">Humedad</span>
+                                <span id="current-humidity" class="stat-value">--%</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <span class="material-symbols-outlined">air</span>
+                            <div>
+                                <span class="stat-label">Viento</span>
+                                <span id="current-wind" class="stat-value">-- km/h</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span id="current-weather-bg-icon" class="material-symbols-outlined bg-icon-large">wb_sunny</span>
+                </section>
+
+                <!-- Hourly Forecast -->
+                <section class="forecast-section">
+                    <div class="section-header">
+                        <h3>Pronóstico 24 Horas</h3>
+                    </div>
+                    <div id="hourly-grid" class="forecast-grid">
+                        <!-- Hourly cards will be injected here via JS -->
+                    </div>
+                </section>
+            </div>
+        </main>
+
+        <footer>
+            <p>© 2026 ClimaMundial. Datos meteorológicos de Open-Meteo.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Saved Locations -->
+    <div id="saved-locations-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Ubicaciones Guardadas</h3>
+                <button id="btn-close-modal" class="btn-icon">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <div class="modal-search">
+                    <form id="modal-search-form" class="search-bar">
+                        <span class="material-symbols-outlined">search</span>
+                        <input type="text" id="modal-city-search" placeholder="Añadir nueva ciudad..."
+                            autocomplete="off">
+                        <div id="modal-search-loading" class="hidden"><span
+                                class="material-symbols-outlined spin">sync</span></div>
+                        <button type="submit" id="modal-search-btn" class="btn-search">Buscar</button>
+                    </form>
+                    <!-- Suggestions in modal -->
+                    <ul id="modal-search-suggestions" class="suggestions-list hidden"></ul>
+                </div>
+
+                <div id="saved-locations-list" class="saved-locations-list">
+                    <!-- Saved cities will be listed here -->
+                </div>
+
+                <div id="empty-saved-state" class="empty-state">
+                    <span class="material-symbols-outlined">bookmark_border</span>
+                    <p>No tienes ubicaciones guardadas</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/main.js"></script>
+</body>
+
+</html>

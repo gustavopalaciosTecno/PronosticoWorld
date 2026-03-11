@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Clima Mundial - Dashboard Profesional</title>
+<!-- Material Symbols for Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        /* Base Styling */
+        :root {
+            --bg-color: #0b131e;
+            --card-bg: #1b2635;
+            --accent-blue: #1d90ff;
+            --text-white: #ffffff;
+            --text-gray: #9ca3af;
+            --gradient-main: linear-gradient(135deg, #1d90ff 0%, #0062ff 100%);
+        }
+
+        html {
+            font-size: 62.5%; /* 1rem = 10px */
+        }
+
+        body {
+            font-size: 1.6rem;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-white);
+            margin: 0;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        /* Layout Structure */
+        .app-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+        }
+
+        /* Header & Search */
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        .logo .icon-box {
+            background: var(--accent-blue);
+            padding: 0.5rem;
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+            margin: 0 2rem;
+        }
+
+        .search-bar input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-white);
+            font-size: 1.6rem;
+            padding: 1rem 1rem 1rem 4rem;
+            outline: none;
+        }
+
+        .search-bar .material-symbols-outlined {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-gray);
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .user-avatar {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 50%;
+            background: #d1d5db;
+            overflow: hidden;
+        }
+
+        /* Main Grid */
+        main {
+            display: grid;
+            grid-template-columns: 1fr 32rem;
+            gap: 3rem;
+        }
+
+        @media (max-width: 1024px) {
+            main {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Weather Hero Card */
+        .weather-hero {
+            background: var(--gradient-main);
+            border-radius: 3rem;
+            padding: 4rem;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 45rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 2;
+        }
+
+        .location-info h2 {
+            font-size: 4rem;
+            margin: 0.5rem 0;
+            font-weight: 700;
+        }
+
+        .location-info .date {
+            font-size: 1.8rem;
+            opacity: 0.9;
+        }
+
+        .badge-updated {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.6rem 1.2rem;
+            border-radius: 0.5rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .hero-middle {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            z-index: 2;
+            margin: 4rem 0;
+        }
+
+        .main-temp {
+            font-size: 10rem;
+            font-weight: 300;
+        }
+
+        .weather-desc {
+            font-size: 2.8rem;
+            font-weight: 500;
+        }
+
+        .hero-bottom {
+            display: flex;
+            gap: 2rem;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2rem;
+            border-radius: 1.5rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stat-card span:first-child {
+            font-size: 2.4rem;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .bg-icon-large {
+            position: absolute;
+            right: -5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 30rem;
+            opacity: 0.1;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Sidebar Section */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .section-header a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-size: 1.4rem;
+        }
+
+        .saved-city-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            transition: transform 0.2s;
+            cursor: pointer;
+        }
+
+        .saved-city-card:hover {
+            transform: translateX(5px);
+        }
+
+        .city-main {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .city-icon {
+            width: 4rem;
+            height: 4rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .city-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .country-name {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+            margin: 0;
+        }
+
+        .city-temp-info {
+            text-align: right;
+        }
+
+        .city-temp {
+            font-size: 2rem;
+            font-weight: 700;
+            display: block;
+        }
+
+        .city-weather-desc {
+            font-size: 1.2rem;
+            color: var(--text-gray);
+        }
+
+        .btn-add-location {
+            width: 100%;
+            background: transparent;
+            border: 1.5px dashed var(--text-gray);
+            color: var(--text-white);
+            padding: 1.5rem;
+            border-radius: 1.5rem;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-add-location:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--text-white);
+        }
+
+        /* Map Section */
+        .map-placeholder {
+            width: 100%;
+            height: 20rem;
+            border-radius: 2rem;
+            background: url('https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800') center/cover;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .map-overlay {
+            background: rgba(27, 38, 53, 0.8);
+            padding: 1rem 2rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        /* Hourly Forecast */
+        .forecast-section {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+            gap: 1.5rem;
+        }
+
+        .hourly-card {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            transition: background 0.3s;
+        }
+
+        .hourly-card.active {
+            background: var(--accent-blue);
+        }
+
+        .hourly-card .time {
+            font-size: 1.4rem;
+            font-weight: 500;
+        }
+
+        .hourly-card .material-symbols-outlined {
+            font-size: 3rem;
+        }
+
+        .hourly-card .temp {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        /* Utility */
+        .blue-text { color: var(--accent-blue); }
+    </style>
+</head>
+<body>
+<div class="app-container">
+<!-- Header -->
+<header>
+<div class="logo">
+<div class="icon-box">
+<span class="material-symbols-outlined">cloud</span>
+</div>
+<span>Clima Mundial</span>
+</div>
+<div class="search-bar">
+<span class="material-symbols-outlined">search</span>
+<input placeholder="Buscar ciudad..." type="text"/>
+</div>
+<div class="user-actions">
+<span class="material-symbols-outlined">notifications</span>
+<div class="user-avatar">
+<img alt="Avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBWmMeU6r7GKkWblRliEOq-kYe5Ng2gb5YF8Zi_g5dcoAK7QLr1O9LGrpiijoqD5OCbyLnDvcFgEPLNkY7PZKR-h3hvpjU16qok0ZdQC2q0hbvEDLP7L4LOtSTVWD9ZIl_osP1_NWEWt57Nr3BWzT3OHQ7usAEvdVxY7TAqliEgtRmuiS0wQOffSujwSSiGPm-u5Wrt659j4dafZmcT-z_gPy6pFgBF1nRKBQ5L7jde9zMbyz7IqUQk7bHcy61V0Cp7Q5p2drDcx5U"/>
+</div>
+</div>
+</header>
+<main>
+<!-- Weather Main Display -->
+<div class="weather-content">
+<section class="weather-hero">
+<div class="hero-top">
+<div class="location-info">
+<div style="display:flex; align-items:center; gap:0.5rem;">
+<span class="material-symbols-outlined" style="font-size:1.8rem">location_on</span>
+<span class="date">Actual</span>
+</div>
+<h2>Madrid, España</h2>
+<p class="date">Lunes, 14 Octubre</p>
+</div>
+<div class="badge-updated">Actualizado ahora</div>
+</div>
+<div class="hero-middle">
+<span class="material-symbols-outlined" style="font-size: 8rem;">wb_sunny</span>
+<div>
+<div class="main-temp">22°</div>
+<div class="weather-desc">Cielo despejado</div>
+</div>
+</div>
+<div class="hero-bottom">
+<div class="stat-card">
+<span class="material-symbols-outlined">thermostat</span>
+<div>
+<span class="stat-label">Sensación</span>
+<span class="stat-value">24°C</span>
+</div>
+</div>
+<div class="stat-card">
+<span class="material-symbols-outlined">opacity</span>
+<div>
+<span class="stat-label">Humedad</span>
+<span class="stat-value">45%</span>
+</div>
+</div>
+<div class="stat-card">
+<span class="material-symbols-outlined">air</span>
+<div>
+<span class="stat-label">Viento</span>
+<span class="stat-value">12 km/h</span>
+</div>
+</div>
+</div>
+<span class="material-symbols-outlined bg-icon-large">wb_sunny</span>
+</section>
+<!-- Hourly Forecast -->
+<section class="forecast-section" style="margin-top: 3rem;">
+<h3 style="font-size: 2rem; margin-bottom: 1rem;">Pronóstico 24 Horas</h3>
+<div class="forecast-grid">
+<div class="hourly-card active">
+<span class="time">Ahora</span>
+<span class="material-symbols-outlined">wb_sunny</span>
+<span class="temp">22°</span>
+</div>
+<div class="hourly-card">
+<span class="time">15:00</span>
+<span class="material-symbols-outlined">wb_sunny</span>
+<span class="temp">23°</span>
+</div>
+<div class="hourly-card">
+<span class="time">16:00</span>
+<span class="material-symbols-outlined">wb_sunny</span>
+<span class="temp">22°</span>
+</div>
+<div class="hourly-card">
+<span class="time">17:00</span>
+<span class="material-symbols-outlined">cloud</span>
+<span class="temp">20°</span>
+</div>
+<div class="hourly-card">
+<span class="time">18:00</span>
+<span class="material-symbols-outlined">cloud</span>
+<span class="temp">19°</span>
+</div>
+<div class="hourly-card">
+<span class="time">19:00</span>
+<span class="material-symbols-outlined">rainy</span>
+<span class="temp">18°</span>
+</div>
+</div>
+</section>
+</div>
+<!-- Sidebar -->
+<aside class="sidebar">
+<div>
+<div class="section-header">
+<h3>Ubicaciones Guardadas</h3>
+<a href="#">Gestionar</a>
+</div>
+<div class="saved-city-card">
+<div class="city-main">
+<div class="city-icon"><span class="material-symbols-outlined blue-text">apartment</span></div>
+<div>
+<p class="city-name">Londres</p>
+<p class="country-name">Reino Unido</p>
+</div>
+</div>
+<div class="city-temp-info">
+<span class="city-temp">15°</span>
+<span class="city-weather-desc">Nublado</span>
+</div>
+</div>
+<div class="saved-city-card">
+<div class="city-main">
+<div class="city-icon"><span class="material-symbols-outlined" style="color: #fbbf24">wb_twilight</span></div>
+<div>
+<p class="city-name">Nueva York</p>
+<p class="country-name">EE. UU.</p>
+</div>
+</div>
+<div class="city-temp-info">
+<span class="city-temp">18°</span>
+<span class="city-weather-desc">Soleado</span>
+</div>
+</div>
+<div class="saved-city-card">
+<div class="city-main">
+<div class="city-icon"><span class="material-symbols-outlined" style="color: #a78bfa">bedtime</span></div>
+<div>
+<p class="city-name">Tokio</p>
+<p class="country-name">Japón</p>
+</div>
+</div>
+<div class="city-temp-info">
+<span class="city-temp">12°</span>
+<span class="city-weather-desc">Despejado</span>
+</div>
+</div>
+<button class="btn-add-location">
+<span class="material-symbols-outlined">add_circle</span>
+                        Añadir Ubicación
+                    </button>
+</div>
+<div class="map-placeholder">
+<div class="map-overlay">
+<span class="material-symbols-outlined">map</span>
+                        Ver mapa interactivo
+                    </div>
+</div>
+</aside>
+</main>
+<footer style="text-align: center; padding: 4rem 0; color: var(--text-gray); font-size: 1.4rem;">
+<p>© 2023 ClimaMundial. Datos meteorológicos profesionales en tiempo real.</p>
+</footer>
+</div>
+</body></html>
