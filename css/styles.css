@@ -296,6 +296,23 @@ header {
     opacity: 0.5;
 }
 
+.empty-state-img {
+    max-width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 50%;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4);
+    margin-bottom: 2rem;
+    animation: floatImage 6s ease-in-out infinite;
+    border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes floatImage {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0); }
+}
+
 /* Main Display */
 .weather-content {
     display: flex;
