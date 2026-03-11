@@ -10,10 +10,22 @@ export async function searchCities(query) {
     if (!query || query.trim().length < 2) return [];
 
     try {
-        const response = await fetch(`${GEOCODING_BASE_URL}?name=${encodeURIComponent(query)}&count=5&language=es&format=json`);
+        const response = await fetch(`${GEOCODING_BASE_URL}?name=${encodeURIComponent(query)}&count=10&language=es&format=json`);
         if (!response.ok) throw new Error('Error al buscar ciudades');
         const data = await response.json();
-        return data.results || [];
+        
+        if (!data.results) return [];
+
+        // Sort by population to always show the most important/real city first
+        // (e.g. Madrid, Spain vs Madrid, Colombia)
+        const sortedResults = data.results.sort((a, b) => {
+            const popA = a.population || 0;
+            const popB = b.population || 0;
+            return popB - popA;
+        });
+
+        // Solo devolver los 5 mejores resultados después de ordenar por relevancia
+        return sortedResults.slice(0, 5);
     } catch (error) {
         console.error('Error in searchCities:', error);
         throw error;
