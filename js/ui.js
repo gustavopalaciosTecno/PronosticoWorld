@@ -154,6 +154,9 @@ export function renderWeather(city, weatherData, isSaved) {
 
     renderHourlyForecast(weatherData.hourly);
     showWeatherContent();
+    
+    // Render the interactive map after content is visible
+    updateMap(city.latitude, city.longitude, city.name);
 }
 
 function renderHourlyForecast(hourly) {
@@ -318,4 +321,47 @@ export function renderSavedCities(cities, onSelect, onRemove) {
 
         list.appendChild(card);
     });
+}
+
+// ---------------------------------------------------------
+// Interactive Map Logic (Leaflet)
+// ---------------------------------------------------------
+let leafMap = null;
+let mapMarker = null;
+
+export function updateMap(lat, lon, cityName) {
+    if (!leafMap) {
+        // Initialize map for the first time
+        leafMap = L.map('map', {
+            zoomControl: false // We reposition it below
+        }).setView([lat, lon], 10);
+
+        // Add Zoom Control to bottom right so it doesn't overlap headers
+        L.control.zoom({ position: 'bottomright' }).addTo(leafMap);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(leafMap);
+    } else {
+        // Update existing map view
+        leafMap.setView([lat, lon], 10);
+    }
+
+    // Remove existing marker if any
+    if (mapMarker) {
+        leafMap.removeLayer(mapMarker);
+    }
+    
+    // Add new marker
+    mapMarker = L.marker([lat, lon]).addTo(leafMap);
+    if (cityName) {
+        mapMarker.bindPopup(`<b>${cityName}</b>`).openPopup();
+    }
+
+    // Fix map initialization issues when switching from display:none to block
+    setTimeout(() => {
+        leafMap.invalidateSize();
+    }, 100);
 }

@@ -547,6 +547,24 @@ header {
     color: rgba(255, 255, 255, 0.8);
 }
 
+/* Interactive Map */
+.map-section {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.map-container {
+    height: 350px;
+    width: 100%;
+    border-radius: 2rem;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    z-index: 1; /* Evitar que el mapa cubra otros modales/buscadores */
+    background: var(--card-bg);
+}
+
 /* Modal Styling */
 .modal-overlay {
     position: fixed;
